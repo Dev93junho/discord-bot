@@ -8,6 +8,12 @@ import { initDatabase } from './utils/database.js';
 
 config();
 
+// Debug: Check environment variables
+console.log('Environment check:');
+console.log('DISCORD_TOKEN exists:', !!process.env.DISCORD_TOKEN);
+console.log('TOKEN length:', process.env.DISCORD_TOKEN?.length || 0);
+console.log('CLIENT_ID:', process.env.CLIENT_ID);
+
 // Replit keep-alive
 if (process.env.REPLIT_DB_URL) {
     import('../keep_alive.js').then(module => module.keepAlive());
