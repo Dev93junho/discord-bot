@@ -14,5 +14,3 @@ build/
 .claude
 music_history.db
 package-lock.json
-.claude/
-.claude
