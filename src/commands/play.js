@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { MusicQueue } from '../utils/queue.js';
-import YouTube from 'youtube-sr';
-import ytdl from '@distube/ytdl-core';
+import playdl from 'play-dl';
 import { savePlayHistory } from '../utils/database.js';
 
 export const data = new SlashCommandBuilder()
@@ -36,23 +35,22 @@ export async function execute(interaction, client) {
     try {
         let songInfo;
         
-        if (ytdl.validateURL(query)) {
-            const info = await ytdl.getInfo(query, {
-                requestOptions: {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-                    }
-                }
-            });
+        // Validate YouTube URL or search
+        const validate = await playdl.validate(query);
+        
+        if (validate === 'yt_video') {
+            // Direct YouTube URL
+            const info = await playdl.video_info(query);
             songInfo = {
-                title: info.videoDetails.title,
-                url: info.videoDetails.video_url,
-                duration: info.videoDetails.lengthSeconds,
-                thumbnail: info.videoDetails.thumbnails[0].url,
-                author: info.videoDetails.author.name
+                title: info.video_details.title,
+                url: info.video_details.url,
+                duration: info.video_details.durationInSec,
+                thumbnail: info.video_details.thumbnails[0].url,
+                author: info.video_details.channel.name
             };
         } else {
-            const searchResults = await YouTube.search(query, { limit: 1 });
+            // Search YouTube
+            const searchResults = await playdl.search(query, { limit: 1 });
             if (searchResults.length === 0) {
                 return interaction.editReply('No results found!');
             }
@@ -61,9 +59,9 @@ export async function execute(interaction, client) {
             songInfo = {
                 title: video.title,
                 url: video.url,
-                duration: video.duration,
-                thumbnail: video.thumbnail?.url,
-                author: video.channel?.name
+                duration: video.durationInSec,
+                thumbnail: video.thumbnails[0].url,
+                author: video.channel.name
             };
         }
         
@@ -108,6 +106,6 @@ export async function execute(interaction, client) {
         await interaction.editReply({ embeds: [embed] });
     } catch (error) {
         console.error('Play command error:', error);
-        await interaction.editReply('There was an error trying to play that song!');
+        await interaction.editReply('There was an error trying to play that song! Please try another one.');
     }
 }
