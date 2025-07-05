@@ -136,7 +136,7 @@ npm run dev
 ### 📅 계획된 기능
 
 <details>
-<summary><b>1단계: 게임 통합 (2025년 3분기)</b></summary>
+<summary><b>1단계: 게임 통합 (다음)</b></summary>
 
 - **화면 캡처 시스템**
   - [ ] `/capture` - 게임플레이 스크린샷 촬영
@@ -151,7 +151,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>2단계: 향상된 권한 (2025년 4분기)</b></summary>
+<summary><b>2단계: 향상된 권한 (계획됨)</b></summary>
 
 - **권한 시스템**
   - [ ] 역할 기반 명령어 접근
@@ -166,7 +166,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>3단계: 음악 확장 (2026년 1분기)</b></summary>
+<summary><b>3단계: 음악 확장 (향후)</b></summary>
 
 - **재생목록 기능**
   - [ ] 재생목록 저장/불러오기
@@ -182,7 +182,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>4단계: AI 기능 (2026년 2분기)</b></summary>
+<summary><b>4단계: AI 기능 (향후)</b></summary>
 
 - **AI 통합**
   - [ ] 자연어 명령

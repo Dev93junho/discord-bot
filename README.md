@@ -136,7 +136,7 @@ npm run dev
 ### 📅 Planned Features
 
 <details>
-<summary><b>Phase 1: Gaming Integration (Q3 2025)</b></summary>
+<summary><b>Phase 1: Gaming Integration (Next)</b></summary>
 
 - **Screen Capture System**
   - [ ] `/capture` - Take gameplay screenshots
@@ -151,7 +151,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 2: Enhanced Permissions (Q4 2025)</b></summary>
+<summary><b>Phase 2: Enhanced Permissions (Planned)</b></summary>
 
 - **Permission System**
   - [ ] Role-based command access
@@ -166,7 +166,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 3: Music Expansion (Q1 2026)</b></summary>
+<summary><b>Phase 3: Music Expansion (Future)</b></summary>
 
 - **Playlist Features**
   - [ ] Save/load playlists
@@ -182,7 +182,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 4: AI Features (Q2 2026)</b></summary>
+<summary><b>Phase 4: AI Features (Future)</b></summary>
 
 - **AI Integration**
   - [ ] Natural language commands
