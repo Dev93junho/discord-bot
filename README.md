@@ -1,6 +1,6 @@
 # Discord Music Bot
 
-YouTube 음악을 재생할 수 있는 Discord 봇입니다.
+YouTube 음악을 재생할 수 있는 Discord 봇입니다. 로컬 환경에서 실행하도록 설계되었습니다.
 
 ## 기능
 
