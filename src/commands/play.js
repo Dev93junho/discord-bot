@@ -35,35 +35,24 @@ export async function execute(interaction, client) {
     try {
         let songInfo;
         
-        // Validate YouTube URL or search
-        const validate = await playdl.validate(query);
+        // Always search instead of direct URL to avoid issues
+        const searchResults = await playdl.search(query, { 
+            limit: 1,
+            source: { youtube: "video" }
+        });
         
-        if (validate === 'yt_video') {
-            // Direct YouTube URL
-            const info = await playdl.video_info(query);
-            songInfo = {
-                title: info.video_details.title,
-                url: info.video_details.url,
-                duration: info.video_details.durationInSec,
-                thumbnail: info.video_details.thumbnails[0].url,
-                author: info.video_details.channel.name
-            };
-        } else {
-            // Search YouTube
-            const searchResults = await playdl.search(query, { limit: 1 });
-            if (searchResults.length === 0) {
-                return interaction.editReply('No results found!');
-            }
-            
-            const video = searchResults[0];
-            songInfo = {
-                title: video.title,
-                url: video.url,
-                duration: video.durationInSec,
-                thumbnail: video.thumbnails[0].url,
-                author: video.channel.name
-            };
+        if (searchResults.length === 0) {
+            return interaction.editReply('No results found! Try a different search term.');
         }
+        
+        const video = searchResults[0];
+        songInfo = {
+            title: video.title || 'Unknown Title',
+            url: video.url,
+            duration: video.durationInSec || 0,
+            thumbnail: video.thumbnails?.[0]?.url || '',
+            author: video.channel?.name || 'Unknown Artist'
+        };
         
         if (!queue.connection) {
             await queue.join(voiceChannel);

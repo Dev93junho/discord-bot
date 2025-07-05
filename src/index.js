@@ -13,6 +13,16 @@ if (process.env.REPLIT_DB_URL) {
     import('../keep_alive.js').then(module => module.keepAlive());
 }
 
+// Initialize play-dl
+import playdl from 'play-dl';
+if (!playdl.getFreeClientID()) {
+    await playdl.setToken({
+        youtube: {
+            cookie: '' // YouTube cookies can be added here if needed
+        }
+    });
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 

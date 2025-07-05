@@ -58,7 +58,9 @@ export class MusicQueue {
         this.currentSong = this.queue.shift();
         
         try {
-            const stream = await playdl.stream(this.currentSong.url);
+            const stream = await playdl.stream(this.currentSong.url, {
+                discordPlayerCompatibility: true
+            });
             
             const resource = createAudioResource(stream.stream, {
                 inputType: stream.type,
@@ -70,6 +72,7 @@ export class MusicQueue {
             this.player.play(resource);
         } catch (error) {
             console.error('Error playing song:', error);
+            console.error('URL:', this.currentSong.url);
             await this.playNext();
         }
     }
