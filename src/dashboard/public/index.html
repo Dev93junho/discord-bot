@@ -151,6 +151,96 @@
             background-color: #7289da;
             color: white;
         }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2f3136;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #8e9297;
+            cursor: pointer;
+            font-size: 16px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #dcddde;
+        }
+        
+        .tab.active {
+            color: #7289da;
+            border-bottom-color: #7289da;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .history-item {
+            background-color: #2f3136;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-info {
+            flex: 1;
+        }
+        
+        .history-time {
+            color: #8e9297;
+            font-size: 0.9em;
+        }
+        
+        .top-songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .top-song-card {
+            background-color: #2f3136;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .rank {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #7289da;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .play-count {
+            color: #43b581;
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -184,9 +274,26 @@
     
     <div class="queue-modal" id="queueModal">
         <div class="queue-content">
-            <span class="close-btn" onclick="closeQueue()">&times;</span>
-            <h2 id="queueTitle">재생 목록</h2>
-            <div id="queueList"></div>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">서버 정보</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('queue')">재생 목록</button>
+                <button class="tab" onclick="switchTab('history')">재생 이력</button>
+                <button class="tab" onclick="switchTab('top')">인기곡</button>
+            </div>
+            
+            <div id="queue-tab" class="tab-content active">
+                <div id="queueList"></div>
+            </div>
+            
+            <div id="history-tab" class="tab-content">
+                <div id="historyList"></div>
+            </div>
+            
+            <div id="top-tab" class="tab-content">
+                <div id="topSongsList"></div>
+            </div>
         </div>
     </div>
     
@@ -209,7 +316,7 @@
                 
                 const guildList = document.getElementById('guildList');
                 guildList.innerHTML = guilds.map(guild => `
-                    <div class="guild-card" onclick="showQueue('${guild.id}', '${guild.name}')">
+                    <div class="guild-card" onclick="showGuildInfo('${guild.id}', '${guild.name}')">
                         ${guild.icon ? 
                             `<img src="${guild.icon}" class="guild-icon">` : 
                             `<div class="guild-icon">${guild.name.charAt(0)}</div>`
@@ -226,13 +333,46 @@
             }
         }
         
-        // Show queue modal
-        async function showQueue(guildId, guildName) {
+        let currentGuildId = null;
+        
+        // Show guild info modal
+        async function showGuildInfo(guildId, guildName) {
+            currentGuildId = guildId;
+            document.getElementById('modalTitle').textContent = `${guildName} - 서버 정보`;
+            document.getElementById('queueModal').style.display = 'block';
+            
+            // Load queue first
+            switchTab('queue');
+        }
+        
+        // Switch tabs
+        async function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Load content based on tab
+            switch(tabName) {
+                case 'queue':
+                    await loadQueue();
+                    break;
+                case 'history':
+                    await loadHistory();
+                    break;
+                case 'top':
+                    await loadTopSongs();
+                    break;
+            }
+        }
+        
+        // Load queue
+        async function loadQueue() {
             try {
-                const response = await fetch(`/api/guild/${guildId}/queue`);
+                const response = await fetch(`/api/guild/${currentGuildId}/queue`);
                 const data = await response.json();
-                
-                document.getElementById('queueTitle').textContent = `${guildName} - 재생 목록`;
                 
                 const queueList = document.getElementById('queueList');
                 if (!data.currentSong && data.queue.length === 0) {
@@ -247,15 +387,66 @@
                         </div>
                     `).join('');
                 }
-                
-                document.getElementById('queueModal').style.display = 'block';
             } catch (error) {
                 console.error('Failed to load queue:', error);
             }
         }
         
-        // Close queue modal
-        function closeQueue() {
+        // Load history
+        async function loadHistory() {
+            try {
+                const response = await fetch(`/api/guild/${currentGuildId}/history`);
+                const history = await response.json();
+                
+                const historyList = document.getElementById('historyList');
+                if (history.length === 0) {
+                    historyList.innerHTML = '<p>재생 이력이 없습니다.</p>';
+                } else {
+                    historyList.innerHTML = history.map(item => {
+                        const date = new Date(item.played_at);
+                        return `
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <div><strong>${item.song_title}</strong></div>
+                                    <div><small>${item.song_author} • ${item.requested_by}</small></div>
+                                    <div class="history-time">${date.toLocaleString()}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Failed to load history:', error);
+            }
+        }
+        
+        // Load top songs
+        async function loadTopSongs() {
+            try {
+                const response = await fetch(`/api/guild/${currentGuildId}/top-songs`);
+                const topSongs = await response.json();
+                
+                const topSongsList = document.getElementById('topSongsList');
+                if (topSongs.length === 0) {
+                    topSongsList.innerHTML = '<p>재생 이력이 없습니다.</p>';
+                } else {
+                    topSongsList.innerHTML = '<div class="top-songs-grid">' + 
+                        topSongs.map((song, index) => `
+                            <div class="top-song-card">
+                                <div class="rank">${index + 1}</div>
+                                <h4>${song.song_title}</h4>
+                                <p>${song.song_author}</p>
+                                <div class="play-count">${song.play_count} plays</div>
+                            </div>
+                        `).join('') + '</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load top songs:', error);
+            }
+        }
+        
+        // Close modal
+        function closeModal() {
             document.getElementById('queueModal').style.display = 'none';
         }
         
