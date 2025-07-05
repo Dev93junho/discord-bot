@@ -1,0 +1,12 @@
+# Railway 전용 빌드 설정
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "ffmpeg", "python3"]
+
+[phases.install]
+cmds = ["npm ci --only=production"]
+
+[start]
+cmd = "node src/index.js"
+
+[variables]
+NODE_ENV = "production"

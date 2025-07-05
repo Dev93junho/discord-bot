@@ -19,8 +19,8 @@ RUN npm ci --only=production
 # Copy source code
 COPY src/ ./src/
 
-# Create volume for database
-VOLUME ["/app/data"]
+# Create data directory for database
+RUN mkdir -p /app/data
 
 # Set environment variable for database location
 ENV DATABASE_PATH=/app/data/music_history.db
