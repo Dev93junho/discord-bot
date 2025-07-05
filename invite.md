@@ -2,12 +2,12 @@
 
 ## 방법 1: 기본 권한으로 초대
 ```
-https://discord.com/api/oauth2/authorize?client_id=1390960264387498034&permissions=36700160&scope=bot%20applications.commands
+https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=36700160&scope=bot%20applications.commands
 ```
 
 ## 방법 2: 최소 권한으로 초대
 ```
-https://discord.com/api/oauth2/authorize?client_id=1390960264387498034&permissions=3145728&scope=bot%20applications.commands
+https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=3145728&scope=bot%20applications.commands
 ```
 
 ## 방법 3: Discord Developer Portal에서 직접 생성
