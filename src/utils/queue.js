@@ -1,5 +1,8 @@
-import { createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, joinVoiceChannel } from '@discordjs/voice';
+import { createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, joinVoiceChannel, StreamType } from '@discordjs/voice';
 import ytdl from 'ytdl-core';
+import { spawn } from 'child_process';
+import ffmpegPath from 'ffmpeg-static';
+import { AudioPreloader } from './preloader.js';
 
 export class MusicQueue {
     constructor() {
@@ -9,6 +12,7 @@ export class MusicQueue {
         this.currentSong = null;
         this.loop = false;
         this.volume = 1.0;
+        this.preloader = new AudioPreloader();
         
         this.player.on(AudioPlayerStatus.Idle, () => {
             if (this.loop && this.currentSong) {
@@ -58,10 +62,12 @@ export class MusicQueue {
         this.currentSong = this.queue.shift();
         
         try {
+            console.log(`Playing: ${this.currentSong.title}`);
+            
             const stream = ytdl(this.currentSong.url, {
-                filter: 'audioonly',
-                highWaterMark: 1 << 25,
+                filter: format => format.audioCodec === 'opus' && format.container === 'webm',
                 quality: 'highestaudio',
+                highWaterMark: 1 << 22, // 4MB buffer
                 requestOptions: {
                     headers: {
                         cookie: process.env.YOUTUBE_COOKIE || '',
@@ -71,8 +77,28 @@ export class MusicQueue {
                 }
             });
             
-            const resource = createAudioResource(stream, {
+            // FFmpeg processing for consistent audio
+            const ffmpegArgs = [
+                '-analyzeduration', '0',
+                '-loglevel', '0',
+                '-i', 'pipe:0',
+                '-acodec', 'libopus',
+                '-f', 'opus',
+                '-ar', '48000',
+                '-ac', '2',
+                'pipe:1'
+            ];
+            
+            const ffmpegProcess = spawn(ffmpegPath, ffmpegArgs);
+            stream.pipe(ffmpegProcess.stdin);
+            
+            const resource = createAudioResource(ffmpegProcess.stdout, {
+                inputType: StreamType.OggOpus,
                 inlineVolume: true
+            });
+            
+            ffmpegProcess.on('error', (error) => {
+                console.error('FFmpeg error:', error);
             });
             
             resource.volume.setVolume(this.volume);
