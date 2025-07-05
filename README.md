@@ -16,6 +16,10 @@
     <a href="#roadmap">Roadmap</a> •
     <a href="#contributing">Contributing</a>
   </p>
+  <p>
+    <a href="README.md">🌐 English</a> •
+    <a href="README.ko.md">🇰🇷 한국어</a>
+  </p>
 </div>
 
 ---
@@ -132,7 +136,7 @@ npm run dev
 ### 📅 Planned Features
 
 <details>
-<summary><b>Phase 1: Gaming Integration (Q1 2024)</b></summary>
+<summary><b>Phase 1: Gaming Integration (Q3 2025)</b></summary>
 
 - **Screen Capture System**
   - [ ] `/capture` - Take gameplay screenshots
@@ -147,7 +151,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 2: Enhanced Permissions (Q2 2024)</b></summary>
+<summary><b>Phase 2: Enhanced Permissions (Q4 2025)</b></summary>
 
 - **Permission System**
   - [ ] Role-based command access
@@ -162,7 +166,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 3: Music Expansion (Q3 2024)</b></summary>
+<summary><b>Phase 3: Music Expansion (Q1 2026)</b></summary>
 
 - **Playlist Features**
   - [ ] Save/load playlists
@@ -178,7 +182,7 @@ npm run dev
 </details>
 
 <details>
-<summary><b>Phase 4: AI Features (Q4 2024)</b></summary>
+<summary><b>Phase 4: AI Features (Q2 2026)</b></summary>
 
 - **AI Integration**
   - [ ] Natural language commands
@@ -196,7 +200,7 @@ npm run dev
 ## 📊 Project Status
 
 ### Current Version: v1.5.0
-- Latest Release: January 2024
+- Latest Release: July 2025
 - Active Development: Yes
 - Community: Growing
 
