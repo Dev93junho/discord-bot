@@ -41,10 +41,13 @@ async function loadCommands() {
         
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command);
+            console.log(`Loaded command: ${command.data.name}`);
         } else {
             console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
+    
+    console.log(`Total commands loaded: ${client.commands.size}`);
 }
 
 client.once('ready', async () => {
@@ -64,6 +67,7 @@ client.once('ready', async () => {
         
         await client.application.commands.set(commands);
         console.log('Successfully registered application commands.');
+        console.log('Registered commands:', commands.map(cmd => cmd.name).join(', '));
         
         // Start dashboard
         startDashboard(client);
@@ -79,6 +83,11 @@ client.on('interactionCreate', async interaction => {
 
     if (!command) {
         console.error(`No command matching ${interaction.commandName} was found.`);
+        console.error('Available commands:', Array.from(client.commands.keys()).join(', '));
+        await interaction.reply({ 
+            content: '⚠️ 이 명령어를 찾을 수 없습니다. 봇을 재시작하거나 잠시 후 다시 시도해주세요.', 
+            ephemeral: true 
+        });
         return;
     }
 
