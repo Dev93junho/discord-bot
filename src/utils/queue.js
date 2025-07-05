@@ -1,5 +1,5 @@
 import { createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, joinVoiceChannel } from '@discordjs/voice';
-import playdl from 'play-dl';
+import ytdl from 'ytdl-core';
 
 export class MusicQueue {
     constructor() {
@@ -58,12 +58,20 @@ export class MusicQueue {
         this.currentSong = this.queue.shift();
         
         try {
-            const stream = await playdl.stream(this.currentSong.url, {
-                discordPlayerCompatibility: true
+            const stream = ytdl(this.currentSong.url, {
+                filter: 'audioonly',
+                highWaterMark: 1 << 25,
+                quality: 'highestaudio',
+                requestOptions: {
+                    headers: {
+                        cookie: process.env.YOUTUBE_COOKIE || '',
+                        'x-youtube-identity-token': process.env.YOUTUBE_IDENTITY_TOKEN || '',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+                    }
+                }
             });
             
-            const resource = createAudioResource(stream.stream, {
-                inputType: stream.type,
+            const resource = createAudioResource(stream, {
                 inlineVolume: true
             });
             

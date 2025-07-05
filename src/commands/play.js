@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { MusicQueue } from '../utils/queue.js';
-import playdl from 'play-dl';
+import ytdl from 'ytdl-core';
+import ytsr from 'ytsr';
 import { savePlayHistory } from '../utils/database.js';
 
 export const data = new SlashCommandBuilder()
@@ -34,24 +35,40 @@ export async function execute(interaction, client) {
     
     try {
         let songInfo;
+        let url;
         
-        // Always search instead of direct URL to avoid issues
-        const searchResults = await playdl.search(query, { 
-            limit: 1,
-            source: { youtube: "video" }
-        });
-        
-        if (searchResults.length === 0) {
-            return interaction.editReply('No results found! Try a different search term.');
+        // Check if it's a YouTube URL
+        if (ytdl.validateURL(query)) {
+            url = query;
+        } else {
+            // Search YouTube
+            const searchResults = await ytsr(query, { limit: 1 });
+            const video = searchResults.items.find(item => item.type === 'video');
+            
+            if (!video) {
+                return interaction.editReply('No results found! Try a different search term.');
+            }
+            
+            url = video.url;
         }
         
-        const video = searchResults[0];
+        // Get video info with cookie support
+        const info = await ytdl.getInfo(url, {
+            requestOptions: {
+                headers: {
+                    cookie: process.env.YOUTUBE_COOKIE || '',
+                    'x-youtube-identity-token': process.env.YOUTUBE_IDENTITY_TOKEN || '',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+                }
+            }
+        });
+        
         songInfo = {
-            title: video.title || 'Unknown Title',
-            url: video.url,
-            duration: video.durationInSec || 0,
-            thumbnail: video.thumbnails?.[0]?.url || '',
-            author: video.channel?.name || 'Unknown Artist'
+            title: info.videoDetails.title,
+            url: info.videoDetails.video_url,
+            duration: info.videoDetails.lengthSeconds,
+            thumbnail: info.videoDetails.thumbnails[0]?.url,
+            author: info.videoDetails.author.name
         };
         
         if (!queue.connection) {
@@ -95,6 +112,6 @@ export async function execute(interaction, client) {
         await interaction.editReply({ embeds: [embed] });
     } catch (error) {
         console.error('Play command error:', error);
-        await interaction.editReply('There was an error trying to play that song! Please try another one.');
+        await interaction.editReply('There was an error trying to play that song! YouTube might be blocking requests. Please try again later.');
     }
 }

@@ -19,7 +19,8 @@
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
     "@discordjs/voice": "^0.16.1",
-    "play-dl": "^1.9.7",
+    "ytdl-core": "npm:@distube/ytdl-core@^4.13.7",
+    "ytsr": "^3.8.4",
     "cors": "^2.8.5",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
