@@ -256,7 +256,6 @@ npm test
 
 - **이슈**: [GitHub Issues](https://github.com/Dev93junho/discord-bot/issues)
 - **토론**: [GitHub Discussions](https://github.com/Dev93junho/discord-bot/discussions)
-- **이메일**: your-email@example.com
 
 ---
 
