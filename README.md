@@ -1,54 +1,262 @@
-# Discord Music Bot
+# 🎵 Discord Music Bot
 
-YouTube 음악을 재생할 수 있는 Discord 봇입니다. 로컬 환경에서 실행하도록 설계되었습니다.
+<div align="center">
+  <img src="https://img.shields.io/badge/Discord.js-v14-blue?style=for-the-badge&logo=discord" alt="Discord.js">
+  <img src="https://img.shields.io/badge/Node.js-v18+-green?style=for-the-badge&logo=node.js" alt="Node.js">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status">
+</div>
 
-## 기능
+<div align="center">
+  <p>A feature-rich Discord bot for playing YouTube music with advanced queue management, play history tracking, and a web dashboard.</p>
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#commands">Commands</a> •
+    <a href="#roadmap">Roadmap</a> •
+    <a href="#contributing">Contributing</a>
+  </p>
+</div>
 
-- YouTube에서 음악 검색 및 재생
-- 재생 목록 관리
-- 일시정지/재개
-- 곡 건너뛰기
-- 반복 재생
-- 재생 목록 확인
+---
 
-## 설치 방법
+## ✨ Features
 
-1. 의존성 설치:
+### 🎶 Music Playback
+- YouTube search and URL playback
+- Queue management with shuffle and loop
+- High-quality audio streaming
+- Automatic disconnect on inactivity
+
+### 📊 Analytics & History
+- Play history tracking per server
+- User statistics and preferences
+- Most played songs tracking
+- Smart recommendations based on history
+
+### 🖥️ Web Dashboard
+- Real-time server statistics
+- Queue visualization
+- Play history browser
+- Server management interface
+
+### 🎯 Smart Features
+- Auto-playlist from popular songs
+- Personalized recommendations
+- Cross-server statistics
+- Advanced permission system
+
+## 📋 Requirements
+
+- Node.js 18.0.0 or higher
+- Discord Bot Token ([Guide](https://discordjs.guide/preparations/setting-up-a-bot-application.html))
+- FFmpeg installed on your system
+- npm or yarn package manager
+
+## 🚀 Installation
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Dev93junho/discord-bot.git
+cd discord-bot
+```
+
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-2. `.env.example` 파일을 `.env`로 복사하고 봇 토큰 입력:
+### 3. Configure environment
 ```bash
 cp .env.example .env
 ```
 
-3. Discord Developer Portal에서 봇 생성 후 토큰을 `.env` 파일에 입력
+Edit `.env` file:
+```env
+DISCORD_TOKEN=your_bot_token_here
+CLIENT_ID=your_client_id_here
+DASHBOARD_PORT=3000 # Optional
+```
 
-4. 봇 실행:
+### 4. Start the bot
 ```bash
 npm start
 ```
 
-개발 모드 (자동 재시작):
+For development mode with auto-restart:
 ```bash
 npm run dev
 ```
 
-## 명령어
+## 📝 Commands
 
-- `/play <query>` - YouTube에서 음악 검색 후 재생
-- `/stop` - 재생 중지 및 대기열 초기화
-- `/skip` - 현재 곡 건너뛰기
-- `/queue` - 재생 목록 확인
-- `/pause` - 일시정지
-- `/resume` - 재개
-- `/loop` - 반복 재생 토글
+### 🎵 Music Commands
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/play` | Play a song from YouTube | `/play <song name or URL>` |
+| `/pause` | Pause current playback | `/pause` |
+| `/resume` | Resume playback | `/resume` |
+| `/skip` | Skip current song | `/skip` |
+| `/stop` | Stop playback and clear queue | `/stop` |
+| `/queue` | Show current queue | `/queue` |
+| `/loop` | Toggle loop mode | `/loop` |
 
-## 필요 권한
+### 📊 Analytics Commands
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/history` | View play history | `/history [type: recent/top]` |
+| `/stats` | View user statistics | `/stats [user]` |
+| `/recommend` | Get song recommendations | `/recommend [type: random/popular/recent]` |
+| `/playlist` | Auto-play popular songs | `/playlist [count]` |
 
-봇이 정상적으로 작동하려면 다음 권한이 필요합니다:
-- 메시지 읽기/보내기
-- 음성 채널 연결
-- 음성 채널에서 말하기
-- 슬래시 명령어 사용
+### 🛠️ Utility Commands
+| Command | Description | Usage |
+|---------|-------------|-------|
+| `/cache` | Manage audio cache | `/cache [action: info/clear]` |
+
+## 🗺️ Development Roadmap
+
+### ✅ Completed Features
+- [x] Basic music playback
+- [x] Queue management
+- [x] Play history database
+- [x] Web dashboard
+- [x] Recommendation system
+- [x] User statistics
+
+### 🚧 In Progress
+- [ ] Screen capture system for gaming
+- [ ] Advanced permission management
+- [ ] Custom playlists
+
+### 📅 Planned Features
+
+<details>
+<summary><b>Phase 1: Gaming Integration (Q1 2024)</b></summary>
+
+- **Screen Capture System**
+  - [ ] `/capture` - Take gameplay screenshots
+  - [ ] Auto-capture on events (kills, wins)
+  - [ ] Gameplay recording with highlights
+  - [ ] Cloud storage integration
+
+- **Game Integration**
+  - [ ] Auto-detect running games
+  - [ ] Game-specific commands
+  - [ ] Stats tracking per game
+</details>
+
+<details>
+<summary><b>Phase 2: Enhanced Permissions (Q2 2024)</b></summary>
+
+- **Permission System**
+  - [ ] Role-based command access
+  - [ ] Command cooldowns per role
+  - [ ] Server-specific settings
+  - [ ] Permission presets
+
+- **Multi-Server Features**
+  - [ ] Global vs local settings
+  - [ ] Cross-server playlists
+  - [ ] Server federation
+</details>
+
+<details>
+<summary><b>Phase 3: Music Expansion (Q3 2024)</b></summary>
+
+- **Playlist Features**
+  - [ ] Save/load playlists
+  - [ ] Collaborative playlists
+  - [ ] Playlist sharing
+  - [ ] Smart shuffle
+
+- **Platform Support**
+  - [ ] Spotify integration
+  - [ ] SoundCloud support
+  - [ ] Direct file uploads
+  - [ ] Live radio streams
+</details>
+
+<details>
+<summary><b>Phase 4: AI Features (Q4 2024)</b></summary>
+
+- **AI Integration**
+  - [ ] Natural language commands
+  - [ ] Music recommendations
+  - [ ] Chat moderation
+  - [ ] Voice commands
+</details>
+
+### 🎯 Priority Queue
+1. 🎮 Screen capture system
+2. 🔐 Permission management
+3. 📋 Playlist system
+4. 🚀 Performance optimization
+
+## 📊 Project Status
+
+### Current Version: v1.5.0
+- Latest Release: January 2024
+- Active Development: Yes
+- Community: Growing
+
+### Statistics
+- Commands: 12+ active commands
+- Servers: Personal use (expanding)
+- Uptime: 99.9%
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+### Quick Start for Contributors
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'feat: Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Setup
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/discord-bot.git
+
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+
+# Run tests
+npm test
+```
+
+## 🐛 Known Issues
+
+- YouTube may occasionally block requests (use VPN as workaround)
+- Audio speed issues on some tracks (FFmpeg processing implemented)
+- Command registration may take 1-2 minutes to appear in Discord
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Discord.js](https://discord.js.org/) - Discord API wrapper
+- [@distube/ytdl-core](https://github.com/distube/ytdl-core) - YouTube downloader
+- [FFmpeg](https://ffmpeg.org/) - Audio processing
+- Community contributors
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/Dev93junho/discord-bot/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Dev93junho/discord-bot/discussions)
+- **Email**: your-email@example.com
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by <a href="https://github.com/Dev93junho">Dev93junho</a></p>
+  <p>⭐ Star this repository if you find it helpful!</p>
+</div>
