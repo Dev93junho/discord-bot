@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { MusicQueue } from '../utils/queue.js';
 import ytdl from 'ytdl-core';
-import ytsr from 'ytsr';
+import ytsr from '@distube/ytsr';
 import { savePlayHistory } from '../utils/database.js';
 
 export const data = new SlashCommandBuilder()
@@ -42,14 +42,21 @@ export async function execute(interaction, client) {
             url = query;
         } else {
             // Search YouTube
-            const searchResults = await ytsr(query, { limit: 1 });
-            const video = searchResults.items.find(item => item.type === 'video');
-            
-            if (!video) {
-                return interaction.editReply('No results found! Try a different search term.');
+            try {
+                const searchResults = await ytsr(query, { limit: 5 });
+                const videos = searchResults.items.filter(item => item.type === 'video');
+                
+                if (videos.length === 0) {
+                    return interaction.editReply('No results found! Try a different search term.');
+                }
+                
+                // Get the first video
+                const video = videos[0];
+                url = video.url;
+            } catch (searchError) {
+                console.error('Search error:', searchError);
+                return interaction.editReply('Failed to search YouTube. Please try using a direct YouTube URL instead.');
             }
-            
-            url = video.url;
         }
         
         // Get video info with cookie support
